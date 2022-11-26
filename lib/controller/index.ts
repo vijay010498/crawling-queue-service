@@ -18,8 +18,8 @@ class CrawlingQueueServiceController {
   }
 
   static enQueueJob(req: Request, res: Response) {
-    const { body: { job } } = req;
-    return QueueService.enQueueJob(job, res);
+    const { body: { job_name, job_url } } = req;
+    return QueueService.enQueueJob(job_name, job_url, res);
   }
 
   static updateJobStatus(req: Request, res: Response) {

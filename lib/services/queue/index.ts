@@ -8,9 +8,8 @@ import { DateTime } from 'luxon';
 
 class QueueService {
 
-  static async enQueueJob(job: JobType, res: Response) {
+  static async enQueueJob(job_name: string, job_url: URL, res: Response) {
     try {
-      const { job_name, job_url } = job;
       const job_id = v4();
       const jobAdd: JobType = {
         created_at: DateTime.now(),

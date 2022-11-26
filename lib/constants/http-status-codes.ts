@@ -4,7 +4,8 @@ const httpCodes =  {
   ok: 200,
   serverError: 500,
   serviceUnavailable: 503,
-  notFound: 404
+  notFound: 404,
+  requestValidation: 422
 };
 
 export {  httpCodes };

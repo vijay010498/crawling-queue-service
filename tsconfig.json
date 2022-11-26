@@ -12,6 +12,7 @@
     "noEmit": true,
     "noImplicitOverride": true,
     "useUnknownInCatchVariables": false,
+    "strictPropertyInitialization": false
   },
   "compileOnSave": true,
 }
