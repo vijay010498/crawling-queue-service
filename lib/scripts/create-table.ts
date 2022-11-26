@@ -10,7 +10,7 @@ const createTable = async (): Promise<boolean> => {
          (
              job_id     varchar(50) PRIMARY KEY,
              job_name   varchar(50)  NOT NULL,
-             status     varchar(10)  NOT NULL,
+             status     varchar(15)  NOT NULL,
              job_url    varchar(255) NOT NULL,
              created_at timestamp    NOT NULL DEFAULT NOW(),
              updated_at timestamp    NOT NULL DEFAULT NOW(),

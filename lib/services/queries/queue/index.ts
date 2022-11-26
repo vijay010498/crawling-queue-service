@@ -27,13 +27,24 @@ class Queue {
   dequeue(): Promise<QueryResult> {
     return new Promise(async (resolve, reject) => {
       try {
+        await postgresClient.query('BEGIN');
         const { rows } = await postgresClient.query(
-          `SELECT * FROM ${crawlQueueTable} WHERE status = $1 ORDER BY created_at LIMIT 1`,
-          [JobStatus.enqueued]
+          `SELECT * FROM ${crawlQueueTable} WHERE status = $1 AND locked = $2 ORDER BY created_at LIMIT 1`,
+          [JobStatus.enqueued, false]
         );
-        resolve(rows[0]);
+        if (rows.length > 0) {
+          const { job_id } = rows[0];
+          await postgresClient.query(
+            `UPDATE ${crawlQueueTable} SET locked = $1, status = $2 WHERE job_id = $3`,
+            [true, JobStatus.in_progress, job_id]
+          );
+          rows[0].status = JobStatus.in_progress;
+          rows[0].locked = true;
+        }
+        await postgresClient.query('COMMIT');
+        resolve(rows[0] || []);
       } catch (err) {
-        console.log(err);
+        await postgresClient.query('ROLLBACK');
         reject(err);
       }
     });
