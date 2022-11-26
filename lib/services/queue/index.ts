@@ -1,5 +1,5 @@
 import { JobStatus } from '../../types/enums/Queue';
-import { localQueue } from '../queries/queue';
+import { queueQueries as QUEUE } from '../queries/queue';
 import type { Response } from 'express';
 import { httpCodes } from '../../constants/http-status-codes';
 import type { Queue as JobType } from '../../types';
@@ -20,7 +20,7 @@ class QueueService {
         status: JobStatus.enqueued,
         updated_at: DateTime.now()
       };
-      await localQueue.enqueue(jobAdd);
+      await QUEUE.enqueue(jobAdd);
       res.json({
         job_id,
         job_name,
@@ -36,7 +36,7 @@ class QueueService {
 
   static async jobsByStatus(status: JobStatus, res: Response) {
     try {
-      const jobs = await localQueue.getByStatus(status);
+      const jobs = await QUEUE.getByStatus(status);
       res.json({
         jobs,
       });
@@ -49,7 +49,7 @@ class QueueService {
 
   static async deQueueJob(res: Response) {
     try {
-      const job = await localQueue.dequeue();
+      const job = await QUEUE.dequeue();
       res.json({
         job
       });
@@ -62,7 +62,7 @@ class QueueService {
 
   static async updateJobStatus(jobId: string, status: JobStatus, res: Response) {
     try {
-      await localQueue.updateStatus(status, jobId);
+      await QUEUE.updateStatus(status, jobId);
       res.json({
         jobId,
         status

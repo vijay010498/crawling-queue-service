@@ -75,4 +75,4 @@ class Queue {
   }
 }
 
-export const localQueue = new Queue();
+export const queueQueries = new Queue();
