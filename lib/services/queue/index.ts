@@ -18,7 +18,8 @@ class QueueService {
         job_name,
         job_url,
         status: JobStatus.enqueued,
-        updated_at: DateTime.now()
+        updated_at: DateTime.now(),
+        locked: false
       };
       await QUEUE.enqueue(jobAdd);
       res.json({

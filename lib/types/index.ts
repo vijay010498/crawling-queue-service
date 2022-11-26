@@ -6,6 +6,7 @@ export interface Queue {
   job_name: string
   status: JobStatus,
   job_url: string,
-  updated_at: DateTime
-  created_at: DateTime
+  updated_at: DateTime,
+  created_at: DateTime,
+  locked: Boolean
 }

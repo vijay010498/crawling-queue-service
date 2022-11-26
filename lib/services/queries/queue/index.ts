@@ -3,6 +3,7 @@ import { JobStatus } from '../../../types/enums/Queue';
 import { postgresClient } from '../../postgres/client';
 import postgresConstants from '../../../constants/postgres';
 import type { QueryResult } from 'pg';
+import { DateTime } from 'luxon';
 
 const { crawlQueueTable } = postgresConstants;
 
@@ -64,8 +65,8 @@ class Queue {
           return reject('Job Not Found');
 
         await postgresClient.query(
-          `UPDATE ${crawlQueueTable} SET status = $1 WHERE job_id = $2`,
-          [status, job_id]
+          `UPDATE ${crawlQueueTable} SET status = $1, updated_at = $2  WHERE job_id = $3`,
+          [status, DateTime.now(), job_id]
         );
         resolve(true);
       } catch (err) {

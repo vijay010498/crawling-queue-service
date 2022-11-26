@@ -12,8 +12,9 @@ const createTable = async (): Promise<boolean> => {
              job_name   varchar(50)  NOT NULL,
              status     varchar(10)  NOT NULL,
              job_url    varchar(255) NOT NULL,
-             created_at timestamp NOT NULL DEFAULT NOW(),
-             updated_at timestamp NOT NULL DEFAULT NOW()
+             created_at timestamp    NOT NULL DEFAULT NOW(),
+             updated_at timestamp    NOT NULL DEFAULT NOW(),
+             locked     bool                  DEFAULT FALSE
          )`
       );
       resolve(true);
