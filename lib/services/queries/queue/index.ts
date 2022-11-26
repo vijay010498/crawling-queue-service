@@ -29,8 +29,8 @@ class Queue {
       try {
         await postgresClient.query('BEGIN');
         const { rows } = await postgresClient.query(
-          `SELECT * FROM ${crawlQueueTable} WHERE status = $1 AND locked = $2 ORDER BY created_at LIMIT 1`,
-          [JobStatus.enqueued, false]
+          `SELECT * FROM ${crawlQueueTable} WHERE status = $1 OR status = $2 AND locked = $3 ORDER BY created_at LIMIT 1`,
+          [JobStatus.enqueued, JobStatus.failed, false]
         );
         if (rows.length > 0) {
           const { job_id } = rows[0];
