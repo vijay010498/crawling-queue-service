@@ -34,18 +34,30 @@ class QueueService {
     }
   }
 
-  static jobsByStatus(status: JobStatus, res: Response) {
-    const jobs = localQueue.getByStatus(status);
-    res.json({
-      jobs,
-    });
+  static async jobsByStatus(status: JobStatus, res: Response) {
+    try {
+      const jobs = await localQueue.getByStatus(status);
+      res.json({
+        jobs,
+      });
+    } catch (err) {
+      res.status(httpCodes.notFound).json({
+        message: err,
+      });
+    }
   }
 
-  static deQueueJob(res: Response) {
-    const job = localQueue.dequeue();
-    res.json({
-      job
-    });
+  static async deQueueJob(res: Response) {
+    try {
+      const job = await localQueue.dequeue();
+      res.json({
+        job
+      });
+    } catch (err) {
+      res.status(httpCodes.serverError).json({
+        message: err,
+      });
+    }
   }
 
   static async updateJobStatus(jobId: string, status: JobStatus, res: Response) {

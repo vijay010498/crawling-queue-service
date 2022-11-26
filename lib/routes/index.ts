@@ -4,11 +4,11 @@ import { CrawlingQueueServiceController } from '../controller';
 const router = express.Router();
 
 function getRouter() {
-  router.post('/job', CrawlingQueueServiceController.enQueueJob);
   router.get('/health', CrawlingQueueServiceController.health);
-  router.get('/jobs/:status', CrawlingQueueServiceController.jobsByStatus);
+  router.post('/job', CrawlingQueueServiceController.enQueueJob);
   router.get('/job', CrawlingQueueServiceController.deQueueJob);
   router.put('/:jobId/:status', CrawlingQueueServiceController.updateJobStatus);
+  router.get('/jobs/:status', CrawlingQueueServiceController.jobsByStatus);
 
   return router;
 }

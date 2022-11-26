@@ -3,9 +3,11 @@ import type { JobStatus } from '../types/enums/Queue';
 
 class Queue {
   public queue: QueueType[];
+
   constructor() {
     this.queue = [];
   }
+
   enqueue(job: QueueType): Promise<boolean> {
     return new Promise((resolve, reject) => {
       try {
@@ -16,15 +18,30 @@ class Queue {
       }
     });
   }
-  dequeue(): QueueType | undefined | null | [] {
-    if (!this.queue.length)
-      return [];
 
-    return this.queue.shift();
+  dequeue(): Promise<QueueType | undefined | null | []> {
+    return new Promise((resolve, reject) => {
+      try {
+        if (!this.queue.length)
+          return resolve([]);
+        return resolve(this.queue.shift());
+      } catch (err) {
+        reject(err);
+      }
+    });
   }
-  getByStatus(status: JobStatus): QueueType[] | QueueType | null {
-    return this.queue.filter(item => item.status === status);
+
+
+  getByStatus(status: JobStatus): Promise< QueueType[] | QueueType | null> {
+    return new Promise((resolve, reject) => {
+      try {
+        resolve(this.queue.filter(item => item.status === status));
+      } catch (err) {
+        reject(err);
+      }
+    });
   }
+
   updateStatus(status: JobStatus, job_id: string): Promise<boolean> {
     return new Promise((resolve, reject) => {
       let index = -1;
@@ -36,6 +53,7 @@ class Queue {
       });
       if (index === -1)
         reject('Job Not Found');
+
 
       this.queue[index].status = status;
       resolve(true);
