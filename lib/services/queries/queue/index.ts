@@ -1,7 +1,7 @@
-import type { Queue as QueueType } from '../types';
-import { JobStatus } from '../types/enums/Queue';
-import { postgresClient } from '../services/postgres/client';
-import postgresConstants from '../constants/postgres';
+import type { Queue as QueueType } from '../../../types';
+import { JobStatus } from '../../../types/enums/Queue';
+import { postgresClient } from '../../postgres/client';
+import postgresConstants from '../../../constants/postgres';
 import type { QueryResult } from 'pg';
 
 const { crawlQueueTable } = postgresConstants;

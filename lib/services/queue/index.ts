@@ -1,5 +1,5 @@
 import { JobStatus } from '../../types/enums/Queue';
-import { localQueue } from '../../queue';
+import { localQueue } from '../queries/queue';
 import type { Response } from 'express';
 import { httpCodes } from '../../constants/http-status-codes';
 import type { Queue as JobType } from '../../types';
