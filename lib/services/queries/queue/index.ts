@@ -76,8 +76,8 @@ class Queue {
           return reject('Job Not Found');
 
         await postgresClient.query(
-          `UPDATE ${crawlQueueTable} SET status = $1, updated_at = $2  WHERE job_id = $3`,
-          [status, DateTime.now(), job_id]
+          `UPDATE ${crawlQueueTable} SET status = $1, updated_at = $2, locked = $3  WHERE job_id = $4`,
+          [status, DateTime.now(), false, job_id]
         );
         resolve(true);
       } catch (err) {
