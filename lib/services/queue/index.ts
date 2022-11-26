@@ -64,10 +64,12 @@ class QueueService {
     try {
       await localQueue.updateStatus(status, jobId);
       res.json({
+        jobId,
         status
       });
     } catch (err) {
       res.status(httpCodes.notFound).json({
+        jobId,
         message: err
       });
     }

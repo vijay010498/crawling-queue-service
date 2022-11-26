@@ -1,17 +1,21 @@
 import type { Queue as QueueType } from '../types';
-import type { JobStatus } from '../types/enums/Queue';
+import { JobStatus } from '../types/enums/Queue';
+import { postgresClient } from '../services/postgres/client';
+import postgresConstants from '../constants/postgres';
+import type { QueryResult } from 'pg';
+
+const { crawlQueueTable } = postgresConstants;
 
 class Queue {
-  public queue: QueueType[];
-
-  constructor() {
-    this.queue = [];
-  }
 
   enqueue(job: QueueType): Promise<boolean> {
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
       try {
-        this.queue.push(job);
+        const { job_id, job_name, status, job_url } = job;
+        await postgresClient.query(
+          `INSERT INTO ${crawlQueueTable} (job_id, job_name,status,job_url) VALUES ($1,$2,$3,$4)`,
+          [job_id, job_name, status, job_url]
+        );
         resolve(true);
       } catch (err) {
         reject(err);
@@ -19,23 +23,30 @@ class Queue {
     });
   }
 
-  dequeue(): Promise<QueueType | undefined | null | []> {
-    return new Promise((resolve, reject) => {
+  dequeue(): Promise<QueryResult> {
+    return new Promise(async (resolve, reject) => {
       try {
-        if (!this.queue.length)
-          return resolve([]);
-        return resolve(this.queue.shift());
+        const { rows } = await postgresClient.query(
+          `SELECT * FROM ${crawlQueueTable} WHERE status = $1 ORDER BY created_at LIMIT 1`,
+          [JobStatus.enqueued]
+        );
+        resolve(rows[0]);
       } catch (err) {
+        console.log(err);
         reject(err);
       }
     });
   }
 
 
-  getByStatus(status: JobStatus): Promise< QueueType[] | QueueType | null> {
-    return new Promise((resolve, reject) => {
+  getByStatus(status: JobStatus): Promise<QueueType[]> {
+    return new Promise(async (resolve, reject) => {
       try {
-        resolve(this.queue.filter(item => item.status === status));
+        const { rows } = await postgresClient.query(
+          `SELECT * FROM ${crawlQueueTable} where status = $1`,
+          [status]
+        );
+        resolve(rows);
       } catch (err) {
         reject(err);
       }
@@ -43,20 +54,23 @@ class Queue {
   }
 
   updateStatus(status: JobStatus, job_id: string): Promise<boolean> {
-    return new Promise((resolve, reject) => {
-      let index = -1;
-      this.queue.forEach((item, i) => {
-        if (item.job_id === job_id) {
-          index = i;
-          return;
-        }
-      });
-      if (index === -1)
-        reject('Job Not Found');
+    return new Promise(async (resolve, reject) => {
+      try {
+        const { rows } = await postgresClient.query(
+          `select exists(select 1 from ${crawlQueueTable} where job_id=$1)`,
+          [job_id]
+        );
+        if (!rows[0].exists)
+          return reject('Job Not Found');
 
-
-      this.queue[index].status = status;
-      resolve(true);
+        await postgresClient.query(
+          `UPDATE ${crawlQueueTable} SET status = $1 WHERE job_id = $2`,
+          [status, job_id]
+        );
+        resolve(true);
+      } catch (err) {
+        reject(err);
+      }
     });
   }
 }
