@@ -6,8 +6,15 @@ class Queue {
   constructor() {
     this.queue = [];
   }
-  enqueue(item: QueueType): void {
-    this.queue.push(item);
+  enqueue(job: QueueType): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      try {
+        this.queue.push(job);
+        resolve(true);
+      } catch (err) {
+        reject(err);
+      }
+    });
   }
   dequeue(): QueueType | undefined | null | [] {
     if (!this.queue.length)

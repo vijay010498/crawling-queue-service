@@ -13,8 +13,13 @@ class CrawlingQueueServiceController {
     return QueueService.jobsByStatus(<JobStatus>status, res);
   }
 
-  static enqueueJob(req: Request, res: Response) {
-    return QueueService.enqueueJob(res);
+  static deQueueJob(req: Request, res: Response) {
+    return QueueService.deQueueJob(res);
+  }
+
+  static enQueueJob(req: Request, res: Response) {
+    const { body: { job } } = req;
+    return QueueService.enQueueJob(job, res);
   }
 
   static updateJobStatus(req: Request, res: Response) {
