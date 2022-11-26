@@ -26,7 +26,6 @@ class QueueService {
         job_id,
         job_name,
         job_status: jobAdd.status,
-        message: 'Job Queued successfully'
       });
     } catch (err) {
       res.status(httpCodes.serverError).json({
