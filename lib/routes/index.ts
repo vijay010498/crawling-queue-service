@@ -23,7 +23,7 @@ function getRouter() {
   router.get('/health', CrawlingQueueServiceController.health);
   router.get('/jobs/:status', CrawlingQueueServiceController.jobsByStatus);
   router.get('/enqueue', CrawlingQueueServiceController.enqueueJob);
-
+  router.put('/:jobId/:status', CrawlingQueueServiceController.updateJobStatus);
 
   return router;
 }

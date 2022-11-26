@@ -18,19 +18,21 @@ class Queue {
   getByStatus(status: JobStatus): QueueType[] | QueueType | null {
     return this.queue.filter(item => item.status === status);
   }
-  updateStatus(status: JobStatus, job_id: string): boolean {
-    let index = -1;
-    this.queue.filter((item, i) => {
-      if (item.job_id === job_id) {
-        index = i;
-        return;
-      }
-    });
-    if (index === -1)
-      return false;
+  updateStatus(status: JobStatus, job_id: string): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      let index = -1;
+      this.queue.forEach((item, i) => {
+        if (item.job_id === job_id) {
+          index = i;
+          return;
+        }
+      });
+      if (index === -1)
+        reject('Job Not Found');
 
-    this.queue[index].status = status;
-    return true;
+      this.queue[index].status = status;
+      resolve(true);
+    });
   }
 }
 

@@ -16,6 +16,11 @@ class CrawlingQueueServiceController {
   static enqueueJob(req: Request, res: Response) {
     return QueueService.enqueueJob(res);
   }
+
+  static updateJobStatus(req: Request, res: Response) {
+    const { params: { status, jobId } } = req;
+    return QueueService.updateJobStatus(jobId, <JobStatus>status, res);
+  }
 }
 
 export {
