@@ -42,7 +42,7 @@ class Queue {
           rows[0].locked = true;
         }
         await postgresClient.query('COMMIT');
-        resolve(rows[0] || []);
+        resolve(rows[0] || {});
       } catch (err) {
         await postgresClient.query('ROLLBACK');
         reject(err);
