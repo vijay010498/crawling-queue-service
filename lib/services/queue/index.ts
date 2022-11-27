@@ -40,7 +40,7 @@ class QueueService {
     try {
       const jobs = await QUEUE.getByStatus(status);
       console.log(`Jobs Requested By status:${status}`);
-      res.json({
+      res.header('Access-Control-Allow-Origin', '*').json({
         jobs,
       });
     } catch (err) {
