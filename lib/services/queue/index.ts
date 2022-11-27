@@ -113,7 +113,7 @@ class QueueService {
       }
       console.log('Random Enqueued Jobs Inserted');
       await Promise.all(enqueueJobsPromises);
-      res.send('Jobs Inserted');
+      res.header('Access-Control-Allow-Origin', '*').send('Jobs Inserted');
     } catch (err) {
       console.log('Add Random jobs Error', err);
       res.status(httpCodes.serverError).json({
