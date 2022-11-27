@@ -10,6 +10,7 @@ function getRouter() {
   router.get('/job', CrawlingQueueServiceController.deQueueJob);
   router.put('/:jobId/:status', RouteErrorHandler.updateJobByStatusHandler, CrawlingQueueServiceController.updateJobStatus);
   router.get('/jobs/:status', RouteErrorHandler.jobsByStatus, CrawlingQueueServiceController.jobsByStatus);
+  router.get('/random/enqueued', CrawlingQueueServiceController.enqueueRandomJobs);
 
   return router;
 }
