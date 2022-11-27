@@ -4,7 +4,7 @@ const pg = new PgClient({
   user: 'postgres',
   password: 'vijay',
   database: postgresConstants.databaseName,
-  host: 'localhost',
+  host: 'postgres',
   port: 5432,
 });
 
