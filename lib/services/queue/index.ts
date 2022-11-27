@@ -1,5 +1,6 @@
 import { JobStatus } from '../../types/enums/Queue';
 import { queueQueries as QUEUE } from '../queries/queue';
+import { resultQueries as RESULT } from '../queries/result';
 import type { Response } from 'express';
 import { httpCodes } from '../../constants/http-status-codes';
 import type { Queue as JobType } from '../../types';
@@ -116,6 +117,21 @@ class QueueService {
       res.header('Access-Control-Allow-Origin', '*').send('Jobs Inserted');
     } catch (err) {
       console.log('Add Random jobs Error', err);
+      res.status(httpCodes.serverError).json({
+        message: err,
+      });
+    }
+  }
+
+  static async getCrawlResults(res: Response) {
+    try {
+      const results = await RESULT.getQueueResults();
+      console.log('Get Crawl Results Completed');
+      res.header('Access-Control-Allow-Origin', '*').json({
+        results,
+      });
+    } catch (err) {
+      console.log('Get Crawl Results Failed', err);
       res.status(httpCodes.serverError).json({
         message: err,
       });

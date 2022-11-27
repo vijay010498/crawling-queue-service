@@ -11,3 +11,11 @@ export interface Queue {
   locked: Boolean
   retry_count: number,
 }
+
+export interface Result {
+  job_id: string,
+  title: string,
+  brand: string,
+  image_url: URL,
+  result_id: string,
+}

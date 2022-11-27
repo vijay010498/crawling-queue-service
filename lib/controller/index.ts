@@ -30,6 +30,10 @@ class CrawlingQueueServiceController {
   static enqueueRandomJobs(req: Request, res: Response) {
     return QueueService.enqueueRandomJobs(res);
   }
+
+  static crawlResults(req: Request, res: Response) {
+    return QueueService.getCrawlResults(res);
+  }
 }
 
 export {
