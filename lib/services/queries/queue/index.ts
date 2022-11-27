@@ -29,14 +29,14 @@ class Queue {
       try {
         await postgresClient.query('BEGIN');
         const { rows } = await postgresClient.query(
-          `SELECT * FROM ${crawlQueueTable} WHERE status = $1 OR status = $2 AND locked = $3 ORDER BY created_at LIMIT 1`,
-          [JobStatus.enqueued, JobStatus.failed, false]
+          `SELECT * FROM ${crawlQueueTable} WHERE status = $1 OR status = $2 AND locked = $3 AND retry_count <= $4 ORDER BY created_at LIMIT 1`,
+          [JobStatus.enqueued, JobStatus.failed, false, postgresConstants.failed_jobs_max_retry]
         );
         if (rows.length > 0) {
-          const { job_id } = rows[0];
+          const { job_id, retry_count } = rows[0];
           await postgresClient.query(
-            `UPDATE ${crawlQueueTable} SET locked = $1, status = $2 WHERE job_id = $3`,
-            [true, JobStatus.in_progress, job_id]
+            `UPDATE ${crawlQueueTable} SET locked = $1, status = $2, retry_count = $3 WHERE job_id = $4`,
+            [true, JobStatus.in_progress, retry_count + 1, job_id]
           );
           rows[0].status = JobStatus.in_progress;
           rows[0].locked = true;

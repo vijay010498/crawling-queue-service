@@ -9,4 +9,5 @@ export interface Queue {
   updated_at: DateTime,
   created_at: DateTime,
   locked: Boolean
+  retry_count: number,
 }
