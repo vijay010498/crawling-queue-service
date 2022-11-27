@@ -55,7 +55,7 @@ class Queue {
     return new Promise(async (resolve, reject) => {
       try {
         const { rows } = await postgresClient.query(
-          `SELECT * FROM ${crawlQueueTable} where status = $1`,
+          `SELECT * FROM ${crawlQueueTable} where status = $1 ORDER BY updated_at LIMIT 100 `,
           [status]
         );
         resolve(rows);

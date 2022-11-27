@@ -39,10 +39,12 @@ class QueueService {
   static async jobsByStatus(status: JobStatus, res: Response) {
     try {
       const jobs = await QUEUE.getByStatus(status);
+      console.log(`Jobs Requested By status:${status}`);
       res.json({
         jobs,
       });
     } catch (err) {
+      console.log(`Jobs Requested By status:${status} Error`, err);
       res.status(httpCodes.notFound).json({
         message: err,
       });
